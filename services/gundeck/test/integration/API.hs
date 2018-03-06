@@ -740,7 +740,7 @@ testLongPushToken :: TestSignature ()
 testLongPushToken g _ b _ = do
     uid <- randomUser b
     clt <- randomClient g uid
-    
+
     -- normal size APNS token should succeed
     tkn1 <- randomToken clt apnsToken
     registerPushTokenRequest uid tkn1 g !!! const 201 === statusCode
