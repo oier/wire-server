@@ -19,17 +19,28 @@ Self hosting and federation is on our long term roadmap.
 See more in "[Open sourcing Wire server code](https://medium.com/@wireapp/open-sourcing-wire-server-code-ef7866a731d5)".
 
 ## Content of the repository
-This repository contains:
+
+This repository contains the following source code:
 
 - **services**
-   - **nginz**: Public API Reverse Proxy
-   - **galley**: Conversations
+   - **nginz**: Public API Reverse Proxy (Nginx with custom libzauth module)
+   - **galley**: Conversations and Teams
    - **brig**: Accounts
    - **gundeck**: Push Notification Hub
    - **cannon**: WebSocket Push Notifications
-   - **cargohold**: Asset Storage
+   - **cargohold**: Asset (image, file, ...) Storage
    - **proxy**: 3rd Party API Integration
+- **tools**
+   - **api-simulations**: Run automated smoke and load tests
+   - **makedeb**: Create Debian packages
+   - **bonanza**: Transform and forward log data
 - **libs**: Shared libraries
+
+It also contains
+
+- **build**: Build scripts and Dockerfiles for some platforms
+- **deploy**: (Work-in-progress) - eventually this will contain instructions on how to run wire-server
+- **doc**: Documentation
 
 ## Architecture Overview
 
@@ -43,17 +54,50 @@ Communication between internal components is currently not guarded by
 dedicated authentication or encryption and is assumed to be confined to a
 private network.
 
-## How do I build `wire-server` a.k.a build instructions
+## How to build `wire-server`
 
-The preferred way to build `wire-server`, which is currently comprised of 7 different services, is by using `docker` since it will ensure that all external dependencies (rust, [cryptobox](https://github.com/wireapp/cryptobox-c.git), openssl, etc.) are correct. For detailed instructions on how to build `wire-server` using `docker`, please check the appropriate [README](...) file.
+There are two options:
 
-If you insist on trying to build it on your host OS, you will need all the dependencies properly installed (refer to nginz and haskell services README file to see the different dependencies) and [stack-1.6.3](https://github.com/commercialhaskell/stack/releases/tag/v1.6.3)
+#### 1. Compile sources natively. 
 
-Then, a `stack install` on this folder should manage to compile all the different Haskell services.
+This requires a range of dependencies that depend on your platform/OS, such as:
 
-TODO: nginz.
+- Haskell compiler and package manager: GHC, stack 
+- Rust compiler and package manager: rustc, cargo
+- some development packages (libsodium, openssl, protobuf, icu, geoip, snappy, ...) that depend on your platform/OS
+- installed [cryptobox-c](https://github.com/wireapp/cryptobox-c)
+    
+See for instance the complete setup for 
 
-## How do I run `wire-server`
+- alpine: [setup for Haskell services](build/alpine/Dockerfile.builder), [setup for nginz](services/nginz/Dockerfile)
+- ubuntu: (TODO)
+
+Once all dependencies are set up, the following should succeed:
+
+```bash
+# build haskell services
+make
+# build nginz
+cd services/nginz && make
+```
+
+#### 2. Use docker
+
+Ready-built images can be downloaded from [here](https://hub.docker.com/r/wireserver/).
+
+If you wish to build your own docker images, you need [docker version >= 17.05](https://www.docker.com/) and [`make`](https://www.gnu.org/software/make/). Then,
+
+```bash
+make docker-services
+```
+
+will, eventually, after a few hours, have built a range of docker images. See the various Makefiles and docker images for details.
+
+## How to run integration tests
+
+TODO
+
+## How to run `wire-server`
 
 ### External dependencies
 
