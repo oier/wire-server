@@ -81,7 +81,7 @@ sudo ldconfig
 
 Make sure stack knows where to find it. In `~/.stack/config.yaml` add:
 
-```bash
+```yaml
 extra-include-dirs:
 - /usr/local/include
 

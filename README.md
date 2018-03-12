@@ -90,7 +90,7 @@ If you wish to build your own docker images, you need [docker version >= 17.05](
 make docker-services
 ```
 
-will, eventually, have built a range of docker images. See the `Makefile`s and `Dockerfile`s, as well as [build/alpine/README.md]() for details.
+will, eventually, have built a range of docker images. See the `Makefile`s and `Dockerfile`s, as well as [build/alpine/README.md](build/alpine/README.md) for details.
 
 ## How to run integration tests
 
@@ -114,7 +114,7 @@ Setting up these real, but in-memory internal and "fake" external dependencies i
 cd deploy/docker-ephemeral && docker-compose up
 ```
 
-To run e.g. `brig`'s integration tests (ensure to have [`keiretsu`](docs/Dependencies.md#Keiretsu) installed):
+To run e.g. `brig`'s integration tests (ensure to have [`keiretsu`](doc/Dependencies.md#keiretsu) installed):
 
 TODO: configuration
 
@@ -124,20 +124,23 @@ cd services/brig && make integration
 
 ## How to run `wire-server`
 
+Documentation for this is not ready yet. More information on how to run `wire-server` will be available in the future.
+
 ### External dependencies
 
- * Amazon account with access to
+* Amazon account with access to
   * SES
   * SQS
   * SNS
   * S3
   * Cloudfront
   * DynamoDB
- * Nexmo/Twilio accounts (if you want to send out SMSes)
+* Nexmo/Twilio accounts (if you want to send out SMSes)
+* Giphy/Google/Spotify/Soundcloud API keys (if you want to support previews by proxying these services)
+* TURN servers (if you want to support Voice/Video calls)
 
 TODO: ....
 
 ## Roadmap
 
-- Documentation on development
 - Build and deployment options
