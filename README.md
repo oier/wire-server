@@ -14,7 +14,7 @@ No license is granted to the Wire trademark and its associated logos, all of whi
 
 This repository contains the source code for the Wire server. It contains all libraries and services necessary to run Wire.
 
-Self hosting and federation is on our long term roadmap.
+Documentation on how to self host your own Wire-Server is not yet available but is planned. Federation is on our long term roadmap.
 
 See more in "[Open sourcing Wire server code](https://medium.com/@wireapp/open-sourcing-wire-server-code-ef7866a731d5)".
 
@@ -54,7 +54,9 @@ Communication between internal components is currently not guarded by
 dedicated authentication or encryption and is assumed to be confined to a
 private network.
 
-## How to build `wire-server`
+## Development setup
+
+### How to build `wire-server` binaries
 
 There are two options:
 
@@ -75,15 +77,17 @@ See for instance the complete setup for
 Once all dependencies are set up, the following should succeed:
 
 ```bash
-# build haskell services
+# build all haskell services
 make
+# build one haskell service, e.g. brig:
+cd services/brig && make
 # build nginz
 cd services/nginz && make
 ```
 
 #### 2. Use docker
 
-Ready-built images can be downloaded from [here](https://hub.docker.com/r/wireserver/).
+*If you don't wish to build all docker images from scratch (e.g. the `alpine-builder` takes a very long time), ready-built images can be downloaded from [here](https://hub.docker.com/r/wireserver/).*
 
 If you wish to build your own docker images, you need [docker version >= 17.05](https://www.docker.com/) and [`make`](https://www.gnu.org/software/make/). Then,
 
@@ -91,11 +95,43 @@ If you wish to build your own docker images, you need [docker version >= 17.05](
 make docker-services
 ```
 
-will, eventually, after a few hours, have built a range of docker images. See the various Makefiles and docker images for details.
+will, eventually, have built a range of docker images. See the `Makefile`s and `Dockerfile`s, as well as [build/alpine/README.md]() for details.
 
 ## How to run integration tests
 
-TODO
+Integration tests require all of the haskell services (brig,galley,cannon,gundeck,proxy,cargohold) to be correctly configured and running, before being able to execute e.g. the `brig-integration` binary. This requires most of the deployment dependencies as seen in the architecture diagram to also be available: 
+
+- Required internal dependencies:
+    - cassandra (with the correct schema)
+    - elasticsearch (with the correct schema)
+    - redis
+- Required external dependencies are the following configured AWS services (or "fake" replacements providing the same API):
+    - SES
+    - SQS
+    - SNS
+    - S3
+    - Cloudfront
+    - DynamoDB
+
+Setting up these real, but in-memory internal and "fake" external dependencies is done easiest using [`docker-compose`](https://docs.docker.com/compose/install/). Run the following in a separate terminal:
+
+```
+cd deploy/docker-ephemeral && docker-compose up
+```
+
+Next, ensure to have `keiretsu` installed globally:
+
+```
+git clone https://github.com/brendanhay/keiretsu.git && cd keiretsu && stack install
+```
+
+To run e.g. `brig`'s integration tests:
+
+TODO: configuration
+
+```bash
+cd services/brig && make integration
+```
 
 ## How to run `wire-server`
 
