@@ -64,15 +64,10 @@ There are two options:
 
 This requires a range of dependencies that depend on your platform/OS, such as:
 
-- Haskell compiler and package manager: GHC, stack 
-- Rust compiler and package manager: rustc, cargo
-- some development packages (libsodium, openssl, protobuf, icu, geoip, snappy, ...) that depend on your platform/OS
-- installed [cryptobox-c](https://github.com/wireapp/cryptobox-c)
-    
-See for instance the complete setup for 
+- Haskell & Rust compiler and package managers 
+- Some package dependencies (libsodium, openssl, protobuf, icu, geoip, snappy, [cryptobox-c](https://github.com/wireapp/cryptobox-c), ...) that depend on your platform/OS
 
-- alpine: [setup for Haskell services](build/alpine/Dockerfile.builder), [setup for nginz](services/nginz/Dockerfile)
-- ubuntu: (TODO)
+See [doc/Dependencies.md](doc/Dependencies.md) for details. 
 
 Once all dependencies are set up, the following should succeed:
 
@@ -119,13 +114,7 @@ Setting up these real, but in-memory internal and "fake" external dependencies i
 cd deploy/docker-ephemeral && docker-compose up
 ```
 
-Next, ensure to have `keiretsu` installed globally:
-
-```
-git clone https://github.com/brendanhay/keiretsu.git && cd keiretsu && stack install
-```
-
-To run e.g. `brig`'s integration tests:
+To run e.g. `brig`'s integration tests (ensure to have [`keiretsu`](docs/Dependencies.md#Keiretsu) installed):
 
 TODO: configuration
 
